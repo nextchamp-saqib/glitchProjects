@@ -12,7 +12,11 @@ var app = express();
 app.use(express.static('public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (request, response) { 
+app.get("/", function(req, res){
+  res.sendFile(__dirname + "/views/index.html");
+});
+
+app.get("/whoami", function (request, response) { 
   response.send({
     ipaddress: request.headers['x-forwarded-for'].split(',')[0],
     language: request.headers["accept-language"],
@@ -20,22 +24,6 @@ app.get("/", function (request, response) {
   })
 });
 
-app.get("/dreams", function (request, response) {
-  response.send(dreams);
-});
-
-// could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
-app.post("/dreams", function (request, response) {
-  dreams.push(request.query.dream);
-  response.sendStatus(200);
-});
-
-// Simple in-memory store for now
-var dreams = [
-  "Find and count some sheep",
-  "Climb a really tall mountain",
-  "Wash the dishes"
-];
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
